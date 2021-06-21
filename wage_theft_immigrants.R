@@ -215,6 +215,10 @@ mw_ot_cases %>%
   summarize(num_cases = n()) %>% 
   View()
 
+mw_ot_cases %>% 
+  filter(ER_NAICS_THREE_DIGITS == "238") %>% 
+  View()
+
 # Analysis
 
 # What is the national average for foreign-born workers in an industry?
@@ -278,7 +282,7 @@ mw_ot_cases_pct_foreign_born_by_industry %>%
             min(MW_OT_CASES),
             median(MW_OT_CASES))
 
-# Make historgrams
+# Make histograms
 ## Percent foreign-born by industry
 plot_pct_foreign_born_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = PCT_FOREIGN_BORN)) +
   geom_histogram(color="black", fill="lightblue", bins = 25) +
