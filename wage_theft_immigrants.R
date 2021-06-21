@@ -1,9 +1,12 @@
 install.packages("formattable")
 install.packages("ipumsr")
+install.packages("psych")
 
 library(formattable)
+library(ggplot2)
 library(ipumsr)
 library(lubridate)
+library(psych)
 library(tidyverse)
 
 # Data import
@@ -115,6 +118,7 @@ citizenship_industry <- citizenship_industry %>%
     names_from = CITIZEN,
     values_from = num_employees) %>% 
   mutate(
+    IND = as.character(IND),
     # Replace NAs with zeros
     across(everything(), ~replace_na(.x, 0)),
     # Simplify citizenship into native- and foreign-born categories
@@ -123,51 +127,44 @@ citizenship_industry <- citizenship_industry %>%
     PCT_NATIVE_BORN = NATIVE_BORN / (NATIVE_BORN + FOREIGN_BORN),
     PCT_FOREIGN_BORN = FOREIGN_BORN / (NATIVE_BORN + FOREIGN_BORN)) %>% 
   ungroup() %>% 
-  mutate(
-    # Format the columns
-    #across(where(is.numeric), ~ formattable::comma(.x, digits = 0, format = "d")),
-    across(starts_with("PCT_"), ~ formattable::percent(.x, 1)),
-    IND = as.character(IND)) %>% 
   select(1, 3, 6:8)
-
-# Test
-citizenship_industry %>% 
-  filter(IND %in% c("9590", "9670", "9680", "9690", "9770", "9780", "9790", "9870")) %>% 
-  summarize(across(where(is.numeric) & -starts_with("PCT_"), sum, na.rm = TRUE))
 
 ## Add the NAICS column to the citizenship by industry data using the crosswalk table
 citizenship_industry <- citizenship_industry %>% 
   left_join(census_naics_crosswalk, by = c("IND" = "IND")) %>% 
-  select(1, 7, 6, 2:5)
+  # We will shortly group by three-digit NAICS
+  mutate(NAICS_THREE_DIGITS = substr(NAICS, 1, 3),
+         COMBOKEY = paste0(IND, NAICS_THREE_DIGITS)) %>% 
+  select(9, 1, 8, 7, 6, 2:5)
 
 ## Group by NAICS and roll up the citizenship by industry data for cases where one NAICS code maps to
 ## multiple Census industry codes
-citizenship_industry <- citizenship_industry %>% 
-  group_by(NAICS) %>% 
+citizenship_industry_three_digit <- citizenship_industry %>% 
+  # Remove duplicate combokeys to avoid double counting Census industry codes that appear in multiple NAICS codes
+  distinct(COMBOKEY, .keep_all = TRUE) %>% 
+  # Group by three-digit NAICS
+  group_by(NAICS_THREE_DIGITS) %>% 
   summarize(DESC = paste0(DESC, collapse = " + "),
             IND = paste0(IND, collapse = " + "),
             across(where(is.numeric) & -starts_with("PCT_"), sum, na.rm = TRUE)) %>% 
   mutate(PCT_NATIVE_BORN = NATIVE_BORN / (NATIVE_BORN + FOREIGN_BORN),
          PCT_FOREIGN_BORN = FOREIGN_BORN / (NATIVE_BORN + FOREIGN_BORN)) %>% 
-  left_join(citizenship_industry, by = "NAICS") %>% 
+  left_join(citizenship_industry, by = "NAICS_THREE_DIGITS") %>% 
   rename("DESC" = 2,
          "IND" = 3,
          "NATIVE_BORN" = 4,
          "FOREIGN_BORN" = 5,
          "PCT_NATIVE_BORN" = 6,
          "PCT_FOREIGN_BORN" = 7) %>% 
-  select(1, 3, 2, 4:7) %>% 
-  distinct(NAICS, .keep_all = TRUE)
-
-# Create a version of the citizenship by industry data set grouped by three-digit NAICS
-citizenship_industry_three_digit <- citizenship_industry %>% 
-  group_by(NAICS_THREE_DIGITS = substr(NAICS, 1, 3)) %>% 
-  summarize(DESC = paste0(DESC, collapse = " + "),
-            IND = paste0(IND, collapse = " + "),
-            across(where(is.numeric) & -starts_with("PCT_"), sum, na.rm = TRUE)) %>% 
-  mutate(PCT_NATIVE_BORN = NATIVE_BORN / (NATIVE_BORN + FOREIGN_BORN),
-         PCT_FOREIGN_BORN = FOREIGN_BORN / (NATIVE_BORN + FOREIGN_BORN)) %>% 
+  # Remove duplicate records
+  distinct(NAICS_THREE_DIGITS, .keep_all = TRUE) %>% 
   select(1, 3, 2, 4:7)
+
+# Test to make sure that duplicate INDs were properly eliminated prior to grouping by three-digit NAICS and summarizing
+citizenship_industry_three_digit %>% 
+  filter(NAICS_THREE_DIGITS %in% c("113", "928", "221")) %>% 
+  arrange(NAICS_THREE_DIGITS) %>% 
+  View()
 
 # Join the three-digit citizenship by industry data to the case_employer table
 case_employer_citizenship_industry <- case_employer %>% 
@@ -183,7 +180,6 @@ case_employer_citizenship_industry %>%
 
 # Return the case IDs for cases with at least one minimum wage or overtime violation
 # for which back wages were assessed.
-
 mw_ot_case_ids <- case_act_eer_viol %>% 
   filter(VIOLATION_TYPE %in% c("MW", "OT"),
          !is.na(AMT_BW_ASSESSED),
@@ -212,6 +208,13 @@ mw_ot_cases %>%
   View()
 # About 12%
 
+# What are those non-matching three-digit NAICS codes?
+mw_ot_cases %>% 
+  filter(is.na(IND)) %>% 
+  group_by(ER_NAICS_THREE_DIGITS) %>% 
+  summarize(num_cases = n()) %>% 
+  View()
+
 # Analysis
 
 # What is the national average for foreign-born workers in an industry?
@@ -225,11 +228,13 @@ mw_ot_cases_pct_foreign_born_by_industry <- mw_ot_cases %>%
   filter(!is.na(PCT_FOREIGN_BORN)) %>% 
   summarize(MW_OT_CASES = n(), .groups = "drop") %>% 
   mutate(PCT_MW_OT_CASES = MW_OT_CASES/sum(MW_OT_CASES),
-         RANK = rank(desc(MW_OT_CASES), ties.method = "min"),
+         RANK_BY_CASES = rank(desc(MW_OT_CASES), ties.method = "min"),
          TOTAL_INDUSTRY_EMPLOYMENT = NATIVE_BORN + FOREIGN_BORN,
+         MW_OT_CASES_PER_THOUSAND_EMPLOYEES = MW_OT_CASES / TOTAL_INDUSTRY_EMPLOYMENT * 1000,
+         RANK_BY_CASES_PER_THOUSAND = rank(desc(MW_OT_CASES_PER_THOUSAND_EMPLOYEES), ties.method = "min"),
          PCT_FOREIGN_BORN_ABOVE_NAT_AVG = PCT_FOREIGN_BORN > .139) %>% 
   arrange(desc(MW_OT_CASES)) %>% 
-  select(RANK, MW_OT_CASES, PCT_MW_OT_CASES, ER_NAICS_THREE_DIGITS, DESC, TOTAL_INDUSTRY_EMPLOYMENT, NATIVE_BORN, FOREIGN_BORN, PCT_NATIVE_BORN, PCT_FOREIGN_BORN, PCT_FOREIGN_BORN_ABOVE_NAT_AVG)
+  select(RANK_BY_CASES, MW_OT_CASES, PCT_MW_OT_CASES, RANK_BY_CASES_PER_THOUSAND, MW_OT_CASES_PER_THOUSAND_EMPLOYEES, ER_NAICS_THREE_DIGITS, DESC, TOTAL_INDUSTRY_EMPLOYMENT, NATIVE_BORN, FOREIGN_BORN, PCT_NATIVE_BORN, PCT_FOREIGN_BORN, PCT_FOREIGN_BORN_ABOVE_NAT_AVG)
 
 # Which of these industries for which nativity data are available are above the national average of 13.9% 
 mw_ot_cases_pct_foreign_born_by_industry %>% 
@@ -250,8 +255,19 @@ mw_ot_cases_pct_foreign_born_by_industry %>%
 mw_ot_cases_pct_foreign_born_by_industry %>% 
   summarize(sum(MW_OT_CASES[PCT_FOREIGN_BORN_ABOVE_NAT_AVG == TRUE]) / sum(MW_OT_CASES))
 
-mw_ot_cases_pct_foreign_born_by_industry %>% 
-  summarize(sum(MW_OT_CASES))
+# Remove gas stations as those have a small foreign-born workforce
+mw_ot_cases_pct_foreign_born_by_industry_no_gas_stations <- mw_ot_cases_pct_foreign_born_by_industry %>% 
+  filter(ER_NAICS_THREE_DIGITS != "447")
+
+# What's the correlation between the rate of wage theft cases and the share of the workforce that is foreign-born?
+cor(mw_ot_cases_pct_foreign_born_by_industry$MW_OT_CASES_PER_THOUSAND_EMPLOYEES,
+    mw_ot_cases_pct_foreign_born_by_industry$PCT_FOREIGN_BORN)
+# .36
+
+# And what about when we remove gas stations?
+cor(mw_ot_cases_pct_foreign_born_by_industry_no_gas_stations$MW_OT_CASES_PER_THOUSAND_EMPLOYEES,
+    mw_ot_cases_pct_foreign_born_by_industry_no_gas_stations$PCT_FOREIGN_BORN)
+# .47
 
 # What is the maximum, minimum and median size and number of wage theft cases for these industries?
 mw_ot_cases_pct_foreign_born_by_industry %>% 
@@ -261,6 +277,35 @@ mw_ot_cases_pct_foreign_born_by_industry %>%
             max(MW_OT_CASES),
             min(MW_OT_CASES),
             median(MW_OT_CASES))
+
+# Make historgrams
+## Percent foreign-born by industry
+plot_pct_foreign_born_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = PCT_FOREIGN_BORN)) +
+  geom_histogram(color="black", fill="lightblue", bins = 25) +
+  geom_vline(aes(xintercept = .139), color="red", linetype="solid", size=1) +
+  scale_x_continuous(labels = scales::label_percent()) +
+  labs(x = "Percent Foreign Born",
+       y = "Number of Industries")
+
+ggsave("data/exported/immigrants/plot_pct_foreign_born_by_industry.png")
+
+## Number of employees by industry
+plot_employees_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = TOTAL_INDUSTRY_EMPLOYMENT)) +
+  geom_histogram(color="black", fill="lightblue", bins = 25) +
+  scale_x_continuous(labels = scales::comma) +
+  labs(x = "Total Industry Employment",
+       y = "Number of Industries")
+
+ggsave("data/exported/immigrants/plot_employees_by_industry.png")
+
+## Number of wage theft cases by industry
+plot_cases_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = MW_OT_CASES)) +
+  geom_histogram(color="black", fill="lightblue", bins = 25) +
+  scale_x_continuous(labels = scales::comma) +
+  labs(x = "Wage Theft Cases",
+       y = "Number of Industries")
+
+ggsave("data/exported/immigrants/plot_cases_by_industry.png")
 
 # Export the mw_ot_cases_pct_foreign_born_by_industry data frame
 write_csv(mw_ot_cases_pct_foreign_born_by_industry,
