@@ -200,7 +200,7 @@ mw_ot_cases <- kase %>%
   # Remove junk case lengths
   filter(!is.na(CASE_LENGTH),
          CASE_LENGTH > 0) %>% 
-  select(1, 29:38)
+  select(1, 29, 11, 17:20, 13, 23, 10, 39, 30:38)
 
 # How many records didn't match?
 mw_ot_cases %>% 
@@ -314,3 +314,16 @@ ggsave("data/exported/immigrants/plot_cases_by_industry.png")
 # Export the mw_ot_cases_pct_foreign_born_by_industry data frame
 write_csv(mw_ot_cases_pct_foreign_born_by_industry,
           "data/exported/immigrants/mw_ot_cases_pct_foreign_born_by_industry.csv")
+
+# Export cases in industries with both high rates of wage theft complaints and high proportions of foreign-born workers
+industries_high_foreign_born <- c("315", "814", "115", "111", "485", "721", "313", "314", "722", "623", "812", "311", "325")
+
+mw_ot_cases_pct_foreign_born_by_industry %>% 
+  filter(ER_NAICS_THREE_DIGITS %in% industries_high_foreign_born) %>% 
+  View()
+
+mw_ot_cases_high_foreign_born <- mw_ot_cases %>% 
+  filter(ER_NAICS_THREE_DIGITS %in% industries_high_foreign_born)
+
+write_csv(mw_ot_cases_high_foreign_born,
+            "data/exported/immigrants/mw_ot_cases_high_foreign_born.csv")
