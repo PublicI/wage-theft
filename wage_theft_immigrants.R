@@ -231,6 +231,12 @@ mw_ot_cases %>%
   summarize(sum(TTL_BW_PD_TO_DATE) / (sum(AMT_BW_ASSESSED)))
 # 95.9%
 
+# Check to make sure this matches what you found previously just for 2019
+mw_ot_cases %>% 
+  filter(DATE_CONCLUDED >= "2019-01-01" &
+           DATE_CONCLUDED <= "2019-12-31") %>% 
+  summarize(sum(AMT_BW_ASSESSED))
+
 # What are the foreign-born proportions of the industries represented in the wage theft data?
 mw_ot_cases_pct_foreign_born_by_industry <- mw_ot_cases %>% 
   group_by(ER_NAICS_THREE_DIGITS, DESC, NATIVE_BORN, FOREIGN_BORN, PCT_NATIVE_BORN, PCT_FOREIGN_BORN) %>% 
