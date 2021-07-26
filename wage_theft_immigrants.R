@@ -226,28 +226,60 @@ citizenship_industry %>%
   summarize(sum(FOREIGN_BORN) / (sum(NATIVE_BORN) + sum(FOREIGN_BORN)))
 # 13.9%
 
+# What is the national average for the percent of assessed back wages paid back?
+mw_ot_cases %>% 
+  summarize(sum(TTL_BW_PD_TO_DATE) / (sum(AMT_BW_ASSESSED)))
+# 95.9%
+
 # What are the foreign-born proportions of the industries represented in the wage theft data?
 mw_ot_cases_pct_foreign_born_by_industry <- mw_ot_cases %>% 
   group_by(ER_NAICS_THREE_DIGITS, DESC, NATIVE_BORN, FOREIGN_BORN, PCT_NATIVE_BORN, PCT_FOREIGN_BORN) %>% 
   filter(!is.na(PCT_FOREIGN_BORN)) %>% 
-  summarize(MW_OT_CASES = n(), .groups = "drop") %>% 
+  summarize(MW_OT_CASES = n(), .groups = "drop",
+            AMT_BW_ASSESSED = sum(AMT_BW_ASSESSED),
+            TTL_BW_PD_TO_DATE = sum(TTL_BW_PD_TO_DATE),
+            TTL_CMP_PD_TO_DATE = sum(TTL_CMP_PD_TO_DATE),
+            AMT_LD_ASSESSED = sum(AMT_LD_ASSESSED)) %>% 
   mutate(PCT_MW_OT_CASES = MW_OT_CASES/sum(MW_OT_CASES),
          RANK_BY_CASES = rank(desc(MW_OT_CASES), ties.method = "min"),
          TOTAL_INDUSTRY_EMPLOYMENT = NATIVE_BORN + FOREIGN_BORN,
          MW_OT_CASES_PER_THOUSAND_EMPLOYEES = MW_OT_CASES / TOTAL_INDUSTRY_EMPLOYMENT * 1000,
          RANK_BY_CASES_PER_THOUSAND = rank(desc(MW_OT_CASES_PER_THOUSAND_EMPLOYEES), ties.method = "min"),
-         PCT_FOREIGN_BORN_ABOVE_NAT_AVG = PCT_FOREIGN_BORN > .139) %>% 
+         PCT_FOREIGN_BORN_ABOVE_NAT_AVG = PCT_FOREIGN_BORN > .139,
+         PCT_TTL_BW_PD_TO_DATE = TTL_BW_PD_TO_DATE / AMT_BW_ASSESSED,
+         PCT_TTL_BW_PD_TO_DATE_BELOW_NAT_AVG = PCT_TTL_BW_PD_TO_DATE < .959) %>% 
   arrange(desc(MW_OT_CASES)) %>% 
-  select(RANK_BY_CASES, MW_OT_CASES, PCT_MW_OT_CASES, RANK_BY_CASES_PER_THOUSAND, MW_OT_CASES_PER_THOUSAND_EMPLOYEES, ER_NAICS_THREE_DIGITS, DESC, TOTAL_INDUSTRY_EMPLOYMENT, NATIVE_BORN, FOREIGN_BORN, PCT_NATIVE_BORN, PCT_FOREIGN_BORN, PCT_FOREIGN_BORN_ABOVE_NAT_AVG)
+  select(RANK_BY_CASES, MW_OT_CASES, PCT_MW_OT_CASES, RANK_BY_CASES_PER_THOUSAND, MW_OT_CASES_PER_THOUSAND_EMPLOYEES, ER_NAICS_THREE_DIGITS, DESC, TOTAL_INDUSTRY_EMPLOYMENT, NATIVE_BORN, FOREIGN_BORN, PCT_NATIVE_BORN, PCT_FOREIGN_BORN, PCT_FOREIGN_BORN_ABOVE_NAT_AVG, AMT_BW_ASSESSED, TTL_BW_PD_TO_DATE, PCT_TTL_BW_PD_TO_DATE, PCT_TTL_BW_PD_TO_DATE_BELOW_NAT_AVG, TTL_CMP_PD_TO_DATE, AMT_LD_ASSESSED)
 
-# Which of these industries for which nativity data are available are above the national average of 13.9% 
+# Which of these industries for which nativity data are available are above the national average of 13.9%?
 mw_ot_cases_pct_foreign_born_by_industry %>% 
   filter(PCT_FOREIGN_BORN_ABOVE_NAT_AVG == TRUE) %>% 
+  arrange(desc(PCT_FOREIGN_BORN)) %>% 
   View()
 
 # Which of these industries are more than 1.5 times the national average?
 mw_ot_cases_pct_foreign_born_by_industry %>% 
   filter(PCT_FOREIGN_BORN > .2085) %>% 
+  View()
+
+# Which of these industries are below the national average of 95.9% of back wages paid?
+mw_ot_cases_pct_foreign_born_by_industry %>% 
+  filter(PCT_TTL_BW_PD_TO_DATE_BELOW_NAT_AVG == TRUE) %>% 
+  arrange(PCT_TTL_BW_PD_TO_DATE) %>% 
+  View()
+
+# Which of those industries are above the national average for foreign-born workers?
+mw_ot_cases_pct_foreign_born_by_industry %>% 
+  filter(PCT_TTL_BW_PD_TO_DATE_BELOW_NAT_AVG == TRUE &
+           PCT_FOREIGN_BORN_ABOVE_NAT_AVG == TRUE) %>% 
+  arrange(PCT_TTL_BW_PD_TO_DATE) %>% 
+  View()
+
+# How many of the top 10 industries by their proportion of foreign-born workers are below the national average of 95.9% of back wages paid?
+mw_ot_cases_pct_foreign_born_by_industry %>% 
+  arrange(desc(PCT_FOREIGN_BORN)) %>% 
+  select(DESC, PCT_FOREIGN_BORN, PCT_TTL_BW_PD_TO_DATE, PCT_TTL_BW_PD_TO_DATE_BELOW_NAT_AVG) %>% 
+  head(10) %>% 
   View()
 
 # How many wage theft cases occurred in industries with a proportion of foreign-born workers
@@ -273,6 +305,11 @@ cor(mw_ot_cases_pct_foreign_born_by_industry_no_gas_stations$MW_OT_CASES_PER_THO
     mw_ot_cases_pct_foreign_born_by_industry_no_gas_stations$PCT_FOREIGN_BORN)
 # .47
 
+# What's the correlation between the repayment rate of back wages and the share of the workforce that is foreign-born?
+cor(mw_ot_cases_pct_foreign_born_by_industry$PCT_TTL_BW_PD_TO_DATE,
+    mw_ot_cases_pct_foreign_born_by_industry$PCT_FOREIGN_BORN)
+# -.17
+
 # What is the maximum, minimum and median size and number of wage theft cases for these industries?
 mw_ot_cases_pct_foreign_born_by_industry %>% 
   summarize(max(TOTAL_INDUSTRY_EMPLOYMENT),
@@ -282,7 +319,7 @@ mw_ot_cases_pct_foreign_born_by_industry %>%
             min(MW_OT_CASES),
             median(MW_OT_CASES))
 
-# Make histograms
+# Make plots
 ## Percent foreign-born by industry
 plot_pct_foreign_born_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = PCT_FOREIGN_BORN)) +
   geom_histogram(color="black", fill="lightblue", bins = 25) +
@@ -292,6 +329,17 @@ plot_pct_foreign_born_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_indu
        y = "Number of Industries")
 
 ggsave("data/exported/immigrants/plot_pct_foreign_born_by_industry.png")
+
+# Percent back wages paid by percent foreign-born
+plot_pct_back_wages_paid_by_pct_foreign_born <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = PCT_FOREIGN_BORN, y = PCT_TTL_BW_PD_TO_DATE)) + geom_point() +
+  geom_point(size = 2, color = "blue") +
+  geom_vline(aes(xintercept = .139), color="red", linetype="solid", size=1) +
+  scale_x_continuous(labels = scales::label_percent()) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  labs(x = "Percent Foreign Born",
+       y = "Percent Back Wages Repaid")
+
+ggsave("data/exported/immigrants/plot_pct_back_wages_paid_by_pct_foreign_born.png")
 
 ## Number of employees by industry
 plot_employees_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = TOTAL_INDUSTRY_EMPLOYMENT)) +
