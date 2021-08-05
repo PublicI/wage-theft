@@ -170,7 +170,8 @@ citizenship_industry_three_digit %>%
 case_employer_citizenship_industry <- case_employer %>% 
   mutate(ER_NAICS_THREE_DIGITS = substr(ER_NAICS, 1, 3)) %>% 
   left_join(citizenship_industry_three_digit, by = c("ER_NAICS_THREE_DIGITS" = "NAICS_THREE_DIGITS")) %>% 
-  select(CASE_ID, ER_TRADE_NAME, ER_NATURE_OF_BUS, ER_NAICS, 54:60)
+  mutate(ER_ADDRESS = str_squish(str_remove_all(paste(ER_ADDR1, ER_ADDR2, ER_ADDR3, sep = " "), "NA"))) %>% 
+  select(CASE_ID, ER_TRADE_NAME, ER_EIN, ER_ADDRESS, ER_CITY, ER_STATE_ID, ER_ZIP, ER_NATURE_OF_BUS, ER_NAICS, 54:60)
 
 # How many records didn't match?
 case_employer_citizenship_industry %>% 
@@ -200,7 +201,7 @@ mw_ot_cases <- kase %>%
   # Remove junk case lengths
   filter(!is.na(CASE_LENGTH),
          CASE_LENGTH > 0) %>% 
-  select(1, 29, 11, 17:20, 13, 23, 10, 39, 30:38)
+  select(1, 29, 30:34, 11, 17:20, 13, 23, 10, 44, 35:43)
 
 # How many records didn't match?
 mw_ot_cases %>% 
