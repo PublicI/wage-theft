@@ -328,6 +328,15 @@ mw_ot_cases_pct_foreign_born_by_industry %>%
             min(MW_OT_CASES),
             median(MW_OT_CASES))
 
+# What's the situation in Florida?
+mw_ot_cases %>% 
+  filter(ER_STATE_ID == "FL") %>% 
+  summarize(num_cases = n(),
+            total_bw_assessed = sum(AMT_BW_ASSESSED),
+            total_bw_paid = sum(TTL_BW_PD_TO_DATE),
+            total_cmp_paid = sum(TTL_CMP_PD_TO_DATE),
+            total_ld_assessed = sum(AMT_LD_ASSESSED))
+
 # Make plots
 ## Percent foreign-born by industry
 plot_pct_foreign_born_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = PCT_FOREIGN_BORN)) +
