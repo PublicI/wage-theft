@@ -337,6 +337,44 @@ mw_ot_cases %>%
             total_cmp_paid = sum(TTL_CMP_PD_TO_DATE),
             total_ld_assessed = sum(AMT_LD_ASSESSED))
 
+# And in Texas?
+mw_ot_cases %>% 
+  filter(ER_STATE_ID == "TX") %>% 
+  summarize(num_cases = n(),
+            total_bw_assessed = sum(AMT_BW_ASSESSED),
+            total_bw_paid = sum(TTL_BW_PD_TO_DATE),
+            total_cmp_paid = sum(TTL_CMP_PD_TO_DATE),
+            total_ld_assessed = sum(AMT_LD_ASSESSED))
+
+# And in California?
+mw_ot_cases %>% 
+  filter(ER_STATE_ID == "CA") %>% 
+  summarize(num_cases = n(),
+            total_bw_assessed = sum(AMT_BW_ASSESSED),
+            total_bw_paid = sum(TTL_BW_PD_TO_DATE),
+            total_cmp_paid = sum(TTL_CMP_PD_TO_DATE),
+            total_ld_assessed = sum(AMT_LD_ASSESSED))
+
+# What about just the garment industry in California?
+mw_ot_cases %>% 
+  filter(ER_STATE_ID == "CA",
+         ER_NAICS_THREE_DIGITS == "315") %>% 
+  summarize(num_cases = n(),
+            total_bw_assessed = sum(AMT_BW_ASSESSED),
+            total_bw_paid = sum(TTL_BW_PD_TO_DATE),
+            total_cmp_paid = sum(TTL_CMP_PD_TO_DATE),
+            total_ld_assessed = sum(AMT_LD_ASSESSED))
+
+# What about restaurants in California?
+mw_ot_cases %>% 
+  filter(ER_STATE_ID == "CA",
+         ER_NAICS_THREE_DIGITS == "722") %>% 
+  summarize(num_cases = n(),
+            total_bw_assessed = sum(AMT_BW_ASSESSED),
+            total_bw_paid = sum(TTL_BW_PD_TO_DATE),
+            total_cmp_paid = sum(TTL_CMP_PD_TO_DATE),
+            total_ld_assessed = sum(AMT_LD_ASSESSED))
+
 # Make plots
 ## Percent foreign-born by industry
 plot_pct_foreign_born_by_industry <- ggplot(mw_ot_cases_pct_foreign_born_by_industry, aes(x = PCT_FOREIGN_BORN)) +
