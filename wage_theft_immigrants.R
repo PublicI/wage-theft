@@ -1,7 +1,3 @@
-install.packages("formattable")
-install.packages("ipumsr")
-install.packages("psych")
-
 library(formattable)
 library(ggplot2)
 library(ipumsr)
@@ -12,7 +8,6 @@ library(tidyverse)
 # Data import
 
 # IPUMS data (2019 ACS)
-
 citizenship_industry <- read_ipums_micro(ddi = "data/citizenship_industry.xml",
                                          data_file = "data/citizenship_industry.dat")
 
@@ -201,7 +196,7 @@ mw_ot_cases <- kase %>%
   # Remove junk case lengths
   filter(!is.na(CASE_LENGTH),
          CASE_LENGTH > 0) %>% 
-  select(1, 29, 30:34, 11, 17:20, 13, 23, 10, 44, 35:43)
+  select(1, 29, 30:34, 11, 17:20, 14, 23, 10, 44, 35:43)
 
 # How many records didn't match?
 mw_ot_cases %>% 
@@ -216,8 +211,51 @@ mw_ot_cases %>%
   summarize(num_cases = n()) %>% 
   View()
 
+# Create a function to return the most common values in the state and NAICS columns
+Modes <- function(x) {
+  ux <- unique(x)
+  tab <- tabulate(match(x, ux))
+  ux[tab == max(tab)]
+}
+
+# Create table of employer aggregates.
+mw_ot_employers <- mw_ot_cases %>% 
+  # Filter out junk EINs so we can accurately group
+  filter(!is.na(ER_EIN),
+         !(ER_EIN %in% c("(b)(7)(E)", "NA", "ER Refused", "EIN Missing", "Dropped", "Owner SSN",
+                         "00-0000000", "99-9999999", "Conciliate", "Conciliated"))) %>% 
+  group_by(ER_EIN) %>% 
+  summarize(TRADE_NAMES = paste0(ER_TRADE_NAME, collapse = ", "),
+            MOST_COMMON_CITY = paste0(Modes(ER_CITY), collapse = ', '),
+            MOST_COMMON_STATE = paste0(Modes(ER_STATE_ID), collapse =', '),
+            MOST_COMMON_NAICS_THREE_DIGITS = paste0(Modes(ER_NAICS_THREE_DIGITS), collapse =', '),
+            NUM_CASES = n(),
+            CONCLUDE_REASONS = paste0(CONCLUDE_REASON_ID, collapse = ", "),
+            TTL_EMP_AMT_BW_ASSESSED = sum(AMT_BW_ASSESSED, na.rm = TRUE),
+            TTL_EMP_AMT_BW_PD_TO_DATE = sum(TTL_BW_PD_TO_DATE, na.rm = TRUE),
+            TTL_EMP_CMP_PD_TO_DATE = sum(TTL_CMP_PD_TO_DATE, na.rm = TRUE),
+            TTL_EMP_AMT_LD_ASSESSED = sum(AMT_LD_ASSESSED, na.rm = TRUE),
+            TTL_UNDUP_EES_VIOLATED = sum(UNDUP_EES_VIOLATED)) %>% 
+  select(ER_EIN,
+         TRADE_NAMES,
+         MOST_COMMON_CITY,
+         MOST_COMMON_STATE,
+         MOST_COMMON_NAICS_THREE_DIGITS,
+         NUM_CASES,
+         CONCLUDE_REASONS,
+         TTL_EMP_AMT_BW_ASSESSED,
+         TTL_EMP_AMT_BW_PD_TO_DATE,
+         TTL_EMP_CMP_PD_TO_DATE,
+         TTL_EMP_AMT_LD_ASSESSED,
+         TTL_UNDUP_EES_VIOLATED)
+
+# Filter to just those employers in the garment industry
+mw_ot_employers_garment_industry <- mw_ot_employers %>% 
+  filter(MOST_COMMON_NAICS_THREE_DIGITS ==  "315") %>% 
+  write_csv("data/exported/immigrants/mw_ot_employers_garment_industry.csv")
+  
 mw_ot_cases %>% 
-  filter(ER_NAICS_THREE_DIGITS == "238") %>% 
+  filter(ER_EIN == "20-8696605") %>% 
   View()
 
 # Analysis
@@ -431,3 +469,8 @@ mw_ot_cases_high_foreign_born <- mw_ot_cases %>%
 
 write_csv(mw_ot_cases_high_foreign_born,
             "data/exported/immigrants/mw_ot_cases_high_foreign_born.csv")
+
+# Export cases in the garment industry.
+mw_ot_cases %>% 
+  filter(ER_NAICS_THREE_DIGITS == "315") %>% 
+  write_csv("data/exported/immigrants/mw_ot_cases_garment_industry.csv")
