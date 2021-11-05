@@ -7,7 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r load packages}
+```{r load packages, include=FALSE}
 library(formattable)
 library(ggplot2)
 library(ipumsr)
@@ -16,7 +16,7 @@ library(psych)
 library(tidyverse)
 ```
 
-```{r import data}
+```{r import data, include=FALSE}
 # CASE_ACT_EER_SUM
 
 col_names_case_act_eer_sum <- c("CASE_ID", "ACT_ID", "CASE_EER_ID", "ER_EE_VIOL", "TTL_ACT_VIOLATIONS", "AMT_BW_COMPUTED", "AMT_BW_ASSESSED", "AMT_LD_ASSESSED", "TTL_BW_PAID", "TTL_CMP_PAID", "RESOLUTION_DATE", "RESOLUTION_EE_CNT", "RESOLUTION_BW_AMT", "RESOLUTION_CMP_AMT", "DATE_BW_PAID", "DATE_CMP_PAID", "FLAG_INCLUDE", "DATE_CHANGED")
@@ -163,11 +163,25 @@ guest_worker_employers <- guest_worker_cases %>%
          TTL_UNDUP_EES_VIOLATED)
 ```
 
-
 # Analysis
 
 ```{r}
-# How many visa-related wage and hour cases are in the data?
+# How many visa-related cases are in the data?
+count(guest_worker_cases)
 
+# How many guest worker-related cases and affected employees have there been? And how much in back wages, civil monetary penalties and liquidated damages were paid out in these cases?
+guest_worker_cases %>% 
+  summarize(num_cases = n(),
+            sum_undup_ees_violated = sum(UNDUP_EES_VIOLATED),
+            sum_amt_bw_assessed = sum(AMT_BW_ASSESSED),
+            sum_ttl_cmp_pd_to_date = sum(TTL_CMP_PD_TO_DATE),
+            sum_amt_ld_assessed = sum(AMT_LD_ASSESSED)) %>% 
+  View()
+
+# How has this changed by year?
+
+# Who are the top offenders?
+guest_worker_employers %>% 
+  
 ```
 
