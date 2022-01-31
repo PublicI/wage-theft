@@ -1,22 +1,33 @@
 ---
 title: "wage_theft_guest_workers"
 output: html_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# Suppress scientific notation
+options(scipen = 999)
 ```
 
-```{r load packages, include=FALSE}
+```{r install packages, include = FALSE}
+install.packages(c("formattable", "ggplot2", "ipumsr", "janitor", "lubridate", "psych", "tidyverse"))
+```
+
+```{r load packages, include = FALSE}
 library(formattable)
 library(ggplot2)
 library(ipumsr)
+library(janitor)
 library(lubridate)
 library(psych)
+library(readxl)
 library(tidyverse)
 ```
 
-```{r import data, include=FALSE}
+```{r import data, include = FALSE}
 # CASE_ACT_EER_SUM
 
 col_names_case_act_eer_sum <- c("CASE_ID", "ACT_ID", "CASE_EER_ID", "ER_EE_VIOL", "TTL_ACT_VIOLATIONS", "AMT_BW_COMPUTED", "AMT_BW_ASSESSED", "AMT_LD_ASSESSED", "TTL_BW_PAID", "TTL_CMP_PAID", "RESOLUTION_DATE", "RESOLUTION_EE_CNT", "RESOLUTION_BW_AMT", "RESOLUTION_CMP_AMT", "DATE_BW_PAID", "DATE_CMP_PAID", "FLAG_INCLUDE", "DATE_CHANGED")
@@ -41,6 +52,12 @@ case_act_summary <- read_delim("data/case_act_summary (1).txt",
                                "|",
                                col_names = col_names_case_act_summary)
 
+# ACTS
+col_names_acts <- c("ACT_ID", "ACT_NAME", "ACT_GROUP", "ACT_CONCIL_ABILITY", "ACT_WORKFORCE_MIN", "ACT_WORKFORCE_MAX", "ACT_MIN_REVENUE", "SORT_ORDER", "ACTIVE_FLAG", "CMP_EXCEPT_PERIOD")
+
+acts <- read_delim("data/v_act (1).txt",
+                   "|",
+                   col_names = col_names_acts)
 # ACT_VIOLATIONS
 
 col_names_act_violations <- c("VIOLATION_ID", "ACT_ID", "VIOLATION_NO", "VIOLATION_TYPE", "VIOLATION_DESC", "EE_ER_VIOL", "START_AGE", "END_AGE", "FLAG_COMPUTE_FB", "ACTIVE_FLAG")
@@ -96,14 +113,34 @@ col_names_naics <- c("NAICS", "NAICSTEXT")
 naics <- read_delim("data/v_naics.txt",
                     "|",
                     col_names = col_names_naics)
+
+# Employment by industry
+
+employment_by_industry <- read_csv("data/employment_by_industry.csv",
+                                             col_types = cols(.default = "?",
+                                                              ER_NAICS_THREE_DIGITS = "c"))
+
+# (Nonimmigrant visa statistics)[https://travel.state.gov/content/travel/en/legal/visa-law0/visa-statistics/nonimmigrant-visa-statistics.html]
+path <- "data/visas_by_type_and_year.xlsx"
+
+visas <- path %>% 
+  # Get sheet names
+  excel_sheets() %>% 
+  set_names() %>% 
+  # Combine all sheets
+  map_df(read_excel,
+      path = path,
+      .id = "FISCAL_YEAR") %>% 
+  select("FISCAL_YEAR", "H-2A", "H-2B") %>% 
+  # Filter out fiscal years prior to 2006
+  filter(str_detect(FISCAL_YEAR, regex("FY9|00|01|02|03|04|05"), negate = T)) %>% 
+  clean_names(case = "all_caps")
 ```
 
-# Data preparation
-
-```{r}
-# Return the case IDs for cases with at least one guest worker-related violation.
-guest_worker_case_ids <- case_act_eer_viol %>% 
-  filter(ACT_ID %in% c("EEV", "H1A", "H2A", "H2AHE", "H2AHO", "H2B", "MSPA", "MSPAHE", "MSPAHO")) %>%
+```{r prepare data, include = FALSE}
+# Return guest worker-related cases.
+guest_worker_case_ids <- kase %>% 
+  filter(REGISTRATION_ACT %in% c("H2A", "H2B")) %>% 
   pull(CASE_ID)
 
 # Return the data for those cases in the kase and case_employer tables.
@@ -141,6 +178,7 @@ guest_worker_employers <- guest_worker_cases %>%
             MOST_COMMON_STATE = paste0(Modes(ER_STATE_ID), collapse =', '),
             NAICS = paste0(Modes(ER_NAICS), collapse =', '),
             NUM_CASES = n(),
+            CASE_IDS = paste0(CASE_ID, collapse = ", "),
             REGISTRATION_ACTS = paste0(REGISTRATION_ACT, collapse = ", "),
             CONCLUDE_REASONS = paste0(CONCLUDE_REASON_ID, collapse = ", "),
             TTL_EMP_AMT_BW_ASSESSED = sum(AMT_BW_ASSESSED, na.rm = TRUE),
@@ -154,6 +192,7 @@ guest_worker_employers <- guest_worker_cases %>%
          MOST_COMMON_STATE,
          NAICS,
          NUM_CASES,
+         CASE_IDS,
          REGISTRATION_ACTS,
          CONCLUDE_REASONS,
          TTL_EMP_AMT_BW_ASSESSED,
@@ -161,27 +200,315 @@ guest_worker_employers <- guest_worker_cases %>%
          TTL_EMP_CMP_PD_TO_DATE,
          TTL_EMP_AMT_LD_ASSESSED,
          TTL_UNDUP_EES_VIOLATED)
+
+# Create table of industry aggregates.
+guest_worker_industries <- guest_worker_cases %>% 
+  # Create a three-digit NAICS column
+  mutate(ER_NAICS_THREE_DIGITS = substr(ER_NAICS, 1, 3)) %>% 
+  group_by(ER_NAICS_THREE_DIGITS) %>% 
+  summarize(NUM_CASES = n(),
+            TTL_EMP_AMT_BW_ASSESSED = sum(AMT_BW_ASSESSED, na.rm = TRUE),
+            TTL_EMP_AMT_BW_PD_TO_DATE = sum(TTL_BW_PD_TO_DATE, na.rm = TRUE),
+            TTL_EMP_CMP_PD_TO_DATE = sum(TTL_CMP_PD_TO_DATE, na.rm = TRUE),
+            TTL_EMP_AMT_LD_ASSESSED = sum(AMT_LD_ASSESSED, na.rm = TRUE),
+            TTL_UNDUP_EES_VIOLATED = sum(UNDUP_EES_VIOLATED)) %>% 
+    select(ER_NAICS_THREE_DIGITS,
+         NUM_CASES,
+         TTL_EMP_AMT_BW_ASSESSED,
+         TTL_EMP_AMT_BW_PD_TO_DATE,
+         TTL_EMP_CMP_PD_TO_DATE,
+         TTL_EMP_AMT_LD_ASSESSED,
+         TTL_UNDUP_EES_VIOLATED) %>% 
+  left_join(employment_by_industry, by = "ER_NAICS_THREE_DIGITS") %>% 
+  mutate(CASES_PER_HUNDRED_THOUSAND_EMPLOYED = round(NUM_CASES / TOTAL_INDUSTRY_EMPLOYMENT * 100000, digits = 1)) %>% 
+  select(1, 8:11, 2:7)
+
+guest_worker_industries %>% 
+  View()
+
+# Export guest workers by industry
+guest_worker_industries %>% 
+  write_csv("data/exported/guest_workers/guest_worker_industries.csv")
+
+# Create table of visa issuances by fiscal year
+visas_by_year <- visas %>% 
+  group_by(FISCAL_YEAR) %>% 
+  summarize(VISAS_H2A = max(H_2A, na.rm = T),
+            VISAS_H2B = max(H_2B, na.rm = T)) %>% 
+  mutate(FISCAL_YEAR = as.numeric(str_replace(FISCAL_YEAR, "FY", "20")))
 ```
 
-# Analysis
-
-```{r}
-# How many visa-related cases are in the data?
-count(guest_worker_cases)
-
+```{r top-line numbers, include=FALSE}
 # How many guest worker-related cases and affected employees have there been? And how much in back wages, civil monetary penalties and liquidated damages were paid out in these cases?
 guest_worker_cases %>% 
   summarize(num_cases = n(),
             sum_undup_ees_violated = sum(UNDUP_EES_VIOLATED),
             sum_amt_bw_assessed = sum(AMT_BW_ASSESSED),
             sum_ttl_cmp_pd_to_date = sum(TTL_CMP_PD_TO_DATE),
-            sum_amt_ld_assessed = sum(AMT_LD_ASSESSED)) %>% 
-  View()
-
-# How has this changed by year?
-
-# Who are the top offenders?
-guest_worker_employers %>% 
-  
+            sum_amt_ld_assessed = sum(AMT_LD_ASSESSED))
 ```
 
+```{r How are these cases broken up?, include = FALSE}
+guest_worker_cases %>% 
+  group_by(REGISTRATION_ACT) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  mutate(PCT_CASES = round(NUM_CASES / sum(NUM_CASES) * 100, 0)) %>% 
+  select(REGISTRATION_ACT, NUM_CASES, PCT_CASES) %>% 
+  arrange(desc(NUM_CASES))
+```
+
+```{r cases vs. visas, include = FALSE}
+guest_worker_cases_by_year <- guest_worker_cases %>% 
+  # Extract the fiscal year from case registration date
+  group_by(REGISTRATION_ACT, FISCAL_YEAR = as.numeric(str_sub(quarter(DATE_REGISTERED, with_year = TRUE, fiscal_start = 10), 1, 4))) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  select(FISCAL_YEAR, REGISTRATION_ACT, NUM_CASES) %>% 
+  # Pivot the data frame wider
+  pivot_wider(names_from = REGISTRATION_ACT, values_from = NUM_CASES, values_fill = 0, names_prefix = "CASES_") %>% 
+  # Join with the visa issuances data frame
+  inner_join(visas_by_year, by = "FISCAL_YEAR") %>% 
+  mutate(CASES_TOTAL =  CASES_H2A + CASES_H2B,
+         VISAS_TOTAL = VISAS_H2A + VISAS_H2B,
+         CASES_PCT_CHANGE = round(CASES_TOTAL / lag(CASES_TOTAL) - 1, digits = 2),
+         VISAS_PCT_CHANGE = round(VISAS_TOTAL / lag(VISAS_TOTAL) - 1, digits = 2)) %>% 
+  select(1:3, 6, 4, 5, 7, 8, 9)
+
+# Export cases by year
+guest_worker_cases_by_year %>% 
+  write_csv("data/exported/guest_workers/guest_worker_cases_by_year.csv")
+
+guest_worker_cases_by_year
+```
+
+```{r When did H-2B cases start getting reported?, include = FALSE}
+guest_worker_cases %>% 
+  filter(REGISTRATION_ACT == "H2B") %>% 
+  select(CASE_ID, REGISTRATION_ACT, DATE_REGISTERED) %>% 
+  arrange(DATE_REGISTERED)
+```
+
+```{r Plot total cases and visa issuances by year., include = FALSE}
+plot_guest_worker_cases_visas_by_year <- guest_worker_cases %>% 
+  # Extract the fiscal year from case registration date
+  group_by(FISCAL_YEAR = as.numeric(str_sub(quarter(DATE_REGISTERED, with_year = TRUE, fiscal_start = 10), 1, 4))) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  select(FISCAL_YEAR, NUM_CASES) %>% 
+  # Join with the visa issuances data frame
+  inner_join(visas_by_year, by = "FISCAL_YEAR") %>% 
+  mutate(NUM_VISAS = VISAS_H2A + VISAS_H2B) %>% 
+  select(FISCAL_YEAR, NUM_CASES, NUM_VISAS) %>% 
+  # Remove FY 2006-2009 and 2020 data
+  filter(FISCAL_YEAR > 2009 & FISCAL_YEAR != 2020) %>% 
+  ggplot(aes(x = FISCAL_YEAR)) + 
+  geom_bar(aes(y = NUM_VISAS), stat = "identity", fill = "tan1", colour = "sienna3") + 
+  geom_line(aes(y = NUM_CASES * 500), stat = "identity") + 
+  scale_y_continuous(sec.axis = sec_axis(~. / 500, name = "NUM_CASES")) + 
+  ggtitle("Wage Theft Cases and Visa Issuances\nFY10 - FY19") + 
+  xlim(2010, 2020)
+
+plot_guest_worker_cases_visas_by_year <- guest_worker_cases %>% 
+  # Extract the fiscal year from case registration date
+  group_by(FISCAL_YEAR = as.numeric(str_sub(quarter(DATE_REGISTERED, with_year = TRUE, fiscal_start = 10), 1, 4))) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  select(FISCAL_YEAR, NUM_CASES) %>% 
+  # Join with the visa issuances data frame
+  inner_join(visas_by_year, by = "FISCAL_YEAR") %>% 
+  mutate(NUM_VISAS = VISAS_H2A + VISAS_H2B) %>% 
+  select(FISCAL_YEAR, NUM_CASES, NUM_VISAS) %>% 
+  # Remove FY 2006-2009 and 2020 data
+  filter(FISCAL_YEAR > 2009 & FISCAL_YEAR != 2020) %>% 
+  ggplot(aes(x = FISCAL_YEAR)) + 
+  geom_bar(aes(y = NUM_VISAS), stat = "identity", fill = "tan1", colour = "sienna3") + 
+  ggtitle("Visa Issuances\nFY10 - FY19") + 
+  xlim(2010, 2020)
+
+print(plot_guest_worker_cases_visas_by_year)
+```
+
+```{r Plot total cases and visa issuances by offset year., include = FALSE}
+plot_guest_worker_cases_visas_by_offset_year <- guest_worker_cases %>% 
+  # Extract the fiscal year from case registration date
+  group_by(FISCAL_YEAR = as.numeric(str_sub(quarter(DATE_REGISTERED, with_year = TRUE, fiscal_start = 10), 1, 4))) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  select(FISCAL_YEAR, NUM_CASES) %>% 
+  # Offset the fiscal year
+  mutate(FISCAL_YEAR_OFFSET = FISCAL_YEAR - 1) %>% 
+  # Join with the visa issuances data frame
+  inner_join(visas_by_year, by = c("FISCAL_YEAR_OFFSET" = "FISCAL_YEAR")) %>% 
+  mutate(NUM_VISAS = VISAS_H2A + VISAS_H2B) %>% 
+  select(FISCAL_YEAR_OFFSET, NUM_CASES, NUM_VISAS) %>% 
+ # Remove FY 2006-2009 and 2020 data
+  filter(FISCAL_YEAR_OFFSET > 2009 & FISCAL_YEAR_OFFSET != 2020) %>% 
+  ggplot(aes(x = FISCAL_YEAR_OFFSET)) + 
+  geom_bar(aes(y = NUM_VISAS), stat = "identity", fill = "tan1", colour = "sienna3") + 
+  geom_line(aes(y = NUM_CASES * 500), stat = "identity") + 
+  scale_y_continuous(sec.axis = sec_axis(~. / 500, name = "NUM_CASES")) + 
+  ggtitle("Wage Theft Cases and Visa Issuances Offset\nFY10 - FY19") + 
+  xlim(2010, 2020)
+
+print(plot_guest_worker_cases_visas_by_offset_year)
+```
+
+```{r Plot the correlation of cases with visas., include = FALSE}
+scatter_guest_worker_cases_visas_by_year <- guest_worker_cases %>% 
+  # Extract the fiscal year from case registration date
+  group_by(FISCAL_YEAR = as.numeric(str_sub(quarter(DATE_REGISTERED, with_year = TRUE, fiscal_start = 10), 1, 4))) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  select(FISCAL_YEAR, NUM_CASES) %>% 
+  # Remove FY 2020 data
+  filter(FISCAL_YEAR != 2020) %>% 
+  # Join with the visa issuances data frame
+  inner_join(visas_by_year, by = "FISCAL_YEAR") %>% 
+  mutate(NUM_VISAS = VISAS_H2A + VISAS_H2B) %>% 
+  select(FISCAL_YEAR, NUM_CASES, NUM_VISAS) %>% 
+ggplot(aes(x = NUM_VISAS, y = NUM_CASES)) + 
+  geom_point(size = 3, shape = 1) + 
+  geom_smooth(method = "auto", se = FALSE, fullrange = FALSE, level = 0.95)
+
+print(scatter_guest_worker_cases_visas_by_year)
+```
+
+```{r Plot cases by registration act by year, include = FALSE}
+plot_guest_worker_cases_by_reg_act_year <- guest_worker_cases %>% 
+  # Extract the fiscal year from case registration date
+  group_by(REGISTRATION_ACT, FISCAL_YEAR = as.numeric(str_sub(quarter(DATE_REGISTERED, with_year = TRUE, fiscal_start = 10), 1, 4))) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  select(FISCAL_YEAR, REGISTRATION_ACT, NUM_CASES) %>% 
+  # Remove FY 2006-2009 and 2020 data
+  filter(FISCAL_YEAR > 2009 & FISCAL_YEAR != 2020) %>% 
+  ggplot(aes(x = FISCAL_YEAR, y = NUM_CASES, color = REGISTRATION_ACT)) + 
+  geom_line() + 
+  xlim(2010, 2020) + 
+  ggtitle("Wage Theft Cases by\nRegistration Act\nFY10 - FY19")
+
+print(plot_guest_worker_cases_by_reg_act_year)
+```
+
+```{r What industries have the highest rate of cases per 100,000 employees?, include = FALSE}
+guest_worker_industries %>% 
+  arrange(desc(CASES_PER_HUNDRED_THOUSAND_EMPLOYED)) %>% 
+  head(5)
+```
+
+```{r How have total cases changed by industry and year for the top five industries?, include = FALSE}
+top_guest_worker_industry_naics <- guest_worker_industries %>% 
+  arrange(desc(CASES_PER_HUNDRED_THOUSAND_EMPLOYED)) %>% 
+  head(5) %>% 
+  pull(ER_NAICS_THREE_DIGITS)
+
+guest_worker_cases_by_industry_and_year <- guest_worker_cases %>% 
+  # Create a three-digit NAICS column
+  mutate(ER_NAICS_THREE_DIGITS = substr(ER_NAICS, 1, 3)) %>% 
+  filter(ER_NAICS_THREE_DIGITS %in% top_guest_worker_industry_naics) %>% 
+  group_by(ER_NAICS_THREE_DIGITS, FISCAL_YEAR = as.numeric(str_sub(quarter(DATE_REGISTERED, with_year = TRUE, fiscal_start = 10), 1, 4))) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  left_join(employment_by_industry, by = "ER_NAICS_THREE_DIGITS") %>% 
+  select(ER_NAICS_THREE_DIGITS,
+         DESC_SIMPLIFIED,
+         FISCAL_YEAR,
+         NUM_CASES) %>% 
+  group_by(DESC_SIMPLIFIED) %>% 
+  select(DESC_SIMPLIFIED, FISCAL_YEAR, NUM_CASES) %>% 
+  # Pivot the data frame wider
+  pivot_wider(names_from = DESC_SIMPLIFIED, values_from = NUM_CASES, values_fill = 0, names_prefix = "CASES_") %>% 
+  clean_names(case = "all_caps")
+
+# Export cases by industry and year
+guest_worker_cases_by_industry_and_year %>% 
+  write_csv("data/exported/guest_workers/guest_worker_cases_by_industry_and_year.csv")
+
+guest_worker_cases_by_industry_and_year
+```
+
+```{r Plot cases by industry and year, include = FALSE}
+plot_guest_worker_cases_by_industry_and_year <- guest_worker_cases %>% 
+  # Create a three-digit NAICS column
+  mutate(ER_NAICS_THREE_DIGITS = substr(ER_NAICS, 1, 3)) %>% 
+  filter(ER_NAICS_THREE_DIGITS %in% top_guest_worker_industry_naics) %>% 
+  group_by(ER_NAICS_THREE_DIGITS, FISCAL_YEAR = as.numeric(str_sub(quarter(DATE_REGISTERED, with_year = TRUE, fiscal_start = 10), 1, 4))) %>% 
+  summarize(NUM_CASES = n()) %>% 
+  # Join with the table of employment by industry data
+  left_join(employment_by_industry, by = "ER_NAICS_THREE_DIGITS") %>% 
+  select(ER_NAICS_THREE_DIGITS,
+         DESC_SIMPLIFIED,
+         FISCAL_YEAR,
+         NUM_CASES) %>% 
+  select(ER_NAICS_THREE_DIGITS, DESC_SIMPLIFIED, FISCAL_YEAR, NUM_CASES) %>% 
+  # Remove FY 2020 data
+  filter(FISCAL_YEAR != 2020) %>% 
+  ggplot(aes(x = FISCAL_YEAR, y = NUM_CASES, color = DESC_SIMPLIFIED)) + 
+  geom_line() + 
+  xlim(2010, 2020) + 
+  ggtitle("Wage Theft Cases by Industry\nFY10 - FY19")
+
+print(plot_guest_worker_cases_by_industry_and_year)
+```
+
+```{r Find the Clay Lowry Forestry case, include = FALSE}
+guest_worker_cases %>% 
+  filter(str_detect(ER_TRADE_NAME, regex("lowry", ignore_case = T)))
+```
+
+```{r How long does the average case last for?, include = FALSE}
+guest_worker_cases %>% 
+  mutate(DATE_REGISTERED = as.Date(parse_date_time(DATE_REGISTERED, "Ymd")),
+         DATE_CONCLUDED = as.Date(parse_date_time(DATE_CONCLUDED, "Ymd")),
+         CASE_LENGTH = DATE_CONCLUDED - DATE_REGISTERED) %>% 
+  summarize(mean(CASE_LENGTH),
+            mean(CASE_LENGTH[REGISTRATION_ACT == "H2A"]),
+            mean(CASE_LENGTH[REGISTRATION_ACT == "H2B"]))
+```
+
+```{r How often are H-2B workers being misclassified?, include = FALSE}
+misclassification_violation_ids <- act_violations %>% 
+  filter(str_detect(VIOLATION_DESC, regex("improper job classification", ignore_case = TRUE))) %>% 
+  pull(VIOLATION_ID)
+
+case_act_eer_viol %>% 
+  filter(VIOLATION_ID %in% misclassification_violation_ids) %>% 
+  summarize(num_violations = n(),
+            sum_ees_represented = sum(NUM_EES_REPRESENTD, na.rm = TRUE),
+            sum_amt_bw_assessed = sum(AMT_BW_ASSESSED, na.rm = TRUE),
+            sum_amt_ld_assessed = sum(AMT_LD_ASSESSED, na.rm = TRUE))
+```
+
+```{r How often are H-2A workers not being provided meals or kitchen facilities?, include= FALSE}
+meals_violation_ids <- act_violations %>% 
+  filter(ACT_ID == "H2A", str_detect(VIOLATION_DESC, regex("meal", ignore_case = TRUE))) %>% 
+  pull(VIOLATION_ID)
+
+case_act_eer_viol %>% 
+  filter(VIOLATION_ID %in% meals_violation_ids) %>% 
+  summarize(num_violations = n(),
+            sum_ees_represented = sum(NUM_EES_REPRESENTD, na.rm = TRUE),
+            sum_amt_bw_assessed = sum(AMT_BW_ASSESSED, na.rm = TRUE),
+            sum_amt_ld_assessed = sum(AMT_LD_ASSESSED, na.rm = TRUE))
+```
+
+```{r How often are H-2A workers not being provided adequate housing?, include = FALSE}
+housing_violation_ids <- act_violations %>% 
+  filter(ACT_ID == "H2A", str_detect(VIOLATION_DESC, regex("charges for housing|provide housing|housing required but not provided|unlawful deposits", ignore_case = TRUE))) %>% 
+  pull(VIOLATION_ID)
+
+case_act_eer_viol %>% 
+  filter(VIOLATION_ID %in% housing_violation_ids) %>% 
+  summarize(num_violations = n(),
+            sum_ees_represented = sum(NUM_EES_REPRESENTD, na.rm = TRUE),
+            sum_amt_bw_assessed = sum(AMT_BW_ASSESSED, na.rm = TRUE),
+            sum_amt_ld_assessed = sum(AMT_LD_ASSESSED, na.rm = TRUE))
+```
+
+```{r How often are H-2A and H-2B workers being forced to pay for recruitment, transportation or visa costs?, include = FALSE}
+recruitment_transportation_visa_violation_ids <- c("115", "1523", "1526", "1584", "1585", "1602", "1608", "1609", "1671", "1692", "1757", "1758", "1762", "3021", "3022", "3023", "3025", "3026", "3027", "3136", "3137")
+
+act_violations %>% 
+  filter(VIOLATION_ID %in% c("115", "1523", "1526", "1584", "1585", "1602", "1608", "1609", "1671", "1692", "1757", "1758", "1762", "3021", "3022", "3023", "3025", "3026", "3027", "3136", "3137")) %>% 
+  View()
+
+case_act_eer_viol %>% 
+  filter(VIOLATION_ID %in% recruitment_transportation_visa_violation_ids) %>% 
+  summarize(num_violations = n(),
+            sum_ees_represented = sum(NUM_EES_REPRESENTD, na.rm = TRUE),
+            sum_amt_bw_assessed = sum(AMT_BW_ASSESSED, na.rm = TRUE),
+            sum_amt_ld_assessed = sum(AMT_LD_ASSESSED, na.rm = TRUE))
+```
