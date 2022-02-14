@@ -1,8 +1,14 @@
 # wage-theft
 
-This repo contains code and data for ["Cheated at Work"](the analysis in When schools call police on kids, a Center for Public Integrity story about disparities in the rates at which students are referred to law enforcement.
+This repo contains code and data for ["Cheated at Work"](https://publicintegrity.org/topics/inequality-poverty-opportunity/workers-rights/cheated-at-work/), a Center for Public Integrity investigation of the effectiveness of federal wage theft laws and the agency charged with enforcing them.
 
-It was published on September 8, 2021 in partnership with USA TODAY and local partners.
+The series consists of four major stories:
+["Ripping off workers without consequences"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/ripping-off-workers-with-no-consequences/), published on May 4, 2021.
+["USPS has cheated mail carriers for years""]("https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/usps-cheated-mail-carriers/), published on August 31, 2021.
+["Wage theft hits immigrants — hard"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/), published on October 14, 2021.
+["STORY #4"](), published on February 24, 2022.
+
+All stories were published in partnership with The Associated Press and Univision.
 
 ### Here's what's in this repo
 
@@ -13,13 +19,9 @@ This R file contains code used to produce the analysis in ["Ripping off workers 
 This R file contains code used to produce the analysis in ["Wage theft hits immigrants — hard"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/).
 
 ##### [wage_theft_guest_workers.Rmd](wage_theft_guest_workers.Rmd)
-This R Markdown file contains code used to produce the analysis in ""
+This R Markdown file contains code used to produce the analysis in [""]().
 
-Here is the data dictionary
-
-Much more information, including important considerations when using this data, links to processed data and data dictionaries, can be found in the information kit.
-
-Original versions of the files in this repo's data folder can be downloaded from the U.S. Department of Education's Civil Rights Data Collection and the National Center for Education Statistics.
+The files relating to wage theft investigations in this repo's data folder were provided by a FOIA request to the Department of Labor that was completed on December 10, 2020. The files contain dinvestigations closed between October 1, 2005 and September 30, 2020. More information about these files can be found in the data dictionary in the data folder.
 
 #### Questions?
 For questions about the contents of this repo, email [Joe Yerardi](https://publicintegrity.org/author/joe-yerardi/) at jyerardi@publicintegrity.org.
