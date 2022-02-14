@@ -1,0 +1,347 @@
+"DESC","IND","NAICS"
+"Crop production  ",170,111
+"Animal production and aquaculture",180,112
+"Forestry except logging ",190,1131
+"Logging ",270,1133
+"Fishing, hunting and trapping ",280,114
+"Support activities for agriculture and forestry ",290,115
+"Oil and gas extraction ",370,211
+"Coal mining ",380,2121
+"Metal ore mining ",390,2122
+"Nonmetallic mineral mining and quarrying ",470,2123
+"Not specified type of mining",480,21
+"Support activities for mining ",490,213
+"Construction (the cleaning of buildings and dwellings is incidental during construction and immediately after construction)",770,23
+"Animal food, grain and oilseed milling ",1070,3111
+"Sugar and confectionery products ",1080,3113
+"Fruit and vegetable preserving and specialty food manufacturing              ",1090,3114
+"Dairy product manufacturing",1170,3115
+"Animal slaughtering and processing ",1180,3116
+"Retail bakeries ",1190,311811
+"Bakeries and tortilla manufacturing, except retail bakeries ",1270,3118
+"Seafood and other miscellaneous foods, n.e.c. ",1280,3117
+"Not specified food industries",1290,311
+"Beverage manufacturing",1370,3121
+"Tobacco manufacturing",1390,3122
+"Fiber, yarn, and thread mills ",1470,3131
+"Fabric mills, except knitting mills",1480,3132
+"Textile and fabric finishing and fabric coating mills ",1490,3133
+"Carpet and rug mills",1570,31411
+"Textile product mills, except carpet and rug",1590,314
+"Knitting fabric mills, and apparel knitting mills ",1670,31324
+"Cut and sew, and apparel accessories and other apparel manufacturing",1691,3152
+"Footwear manufacturing",1770,3162
+"Leather and hide tanning and finishing, and other leather and allied product manufacturing",1790,3161
+"Pulp, paper, and paperboard mills ",1870,3221
+"Paperboard container manufacturing",1880,32221
+"Miscellaneous paper and pulp products  ",1890,32222
+"Printing and related support activities ",1990,3231
+"Petroleum refining ",2070,32411
+"Miscellaneous petroleum and coal products ",2090,32412
+"Resin, synthetic rubber, and fibers and filaments manufacturing   ",2170,3252
+"Agricultural chemical manufacturing  ",2180,3253
+"Pharmaceutical and medicine manufacturing",2190,3254
+"Paint, coating, and adhesive manufacturing ",2270,3255
+"Soap, cleaning compound, and cosmetics manufacturing ",2280,3256
+"Industrial and miscellaneous chemicals ",2290,3251
+"Plastics product manufacturing ",2370,3261
+"Tire manufacturing ",2380,32621
+"Rubber products, except tires, manufacturing ",2390,32622
+"Pottery, ceramics, and plumbing fixture manufacturing  ",2470,32711
+"Clay building material and refractories manufacturing",2480,327120
+"Glass and glass product manufacturing ",2490,3272
+"Cement, concrete, lime, and gypsum product manufacturing ",2570,3273
+"Miscellaneous nonmetallic mineral product manufacturing ",2590,3279
+"Iron and steel mills and steel product manufacturing  ",2670,3311
+"Aluminum production and processing  ",2680,3313
+"Nonferrous metal (except aluminum) production and processing ",2690,3314
+"Foundries ",2770,3315
+"Metal forgings and stampings ",2780,3321
+"Cutlery and hand tool manufacturing  ",2790,3322
+"Structural metals, and boiler, tank, and shipping container manufacturing ",2870,3323
+"Machine shops; turned product; screw, nut, and bolt manufacturing  ",2880,3327
+"Coating, engraving, heat treating, and allied activities ",2890,3328
+"Ordnance ",2970,332992
+"Miscellaneous fabricated metal products manufacturing             ",2980,3325
+"Not specified metal industries",2990,331
+"Agricultural implement manufacturing ",2990,332
+"Agricultural implement manufacturing ",3070,33311
+"Construction, and mining and oil and gas field machinery manufacturing ",3080,33312
+"Commercial and service industry machinery manufacturing",3095,3333
+"Metalworking machinery manufacturing",3170,3335
+"Engine, turbine, and power transmission equipment manufacturing",3180,3336
+"Machinery manufacturing, n.e.c. or not specified",3291,334
+"Computer and peripheral equipment manufacturing",3365,3341
+"Communications, audio, and video equipment manufacturing",3370,3342
+"Navigational, measuring, electromedical, and control instruments manufacturing",3380,3345
+"Electronic component and product manufacturing, n.e.c. ",3390,3344
+"Household appliance manufacturing ",3470,3352
+"Electric lighting and electrical equipment manufacturing, and other electrical component manufacturing, n.e.c.",3490,3351
+"Motor vehicles and motor vehicle equipment manufacturing ",3570,3361
+"Aircraft and parts manufacturing",3580,336411
+"Aerospace products and parts manufacturing ",3590,336414
+"Railroad rolling stock manufacturing",3670,3365
+"Ship and boat building ",3680,3366
+"Other transportation equipment manufacturing",3690,3369
+"Sawmills and wood preservation ",3770,3211
+"Veneer, plywood, and engineered wood products ",3780,3212
+"Prefabricated wood buildings and mobile homes manufacturing",3790,321991
+"Miscellaneous wood products ",3875,3219
+"Furniture and related product manufacturing ",3895,337
+"Medical equipment and supplies manufacturing",3960,3391
+"Sporting and athletic goods, and doll, toy and game manufacturing",3970,33992
+"Miscellaneous manufacturing, n.e.c.  ",3980,3399
+"Not specified manufacturing industries",3990,31
+"Motor vehicle and motor vehicle parts and supplies merchant wholesalers",4070,4231
+"Furniture and home furnishing merchant wholesalers   ",4080,4232
+"Lumber and other construction materials merchant wholesalers ",4090,4233
+"Professional and commercial equipment and supplies merchant wholesalers",4170,4234
+"Metals and minerals, except petroleum, merchant wholesalers                         ",4180,4235
+"Household appliances and electrical and electronic goods merchant wholesalers ",4195,4236
+"Hardware, and plumbing and heating equipment, and supplies merchant wholesalers",4265,4237
+"Machinery, equipment, and supplies merchant wholesalers     ",4270,4238
+"Recyclable material merchant wholesalers ",4280,42393
+"Miscellaneous durable goods merchant wholesalers    ",4290,4239
+"Paper and paper products merchant wholesalers ",4370,4241
+"Drugs, sundries, and chemical and allied products merchant  wholesalers ",4380,4242
+"Apparel, piece goods, and notions merchant wholesalers",4390,4243
+"Grocery and related product merchant wholesalers ",4470,4244
+"Farm product raw material merchant wholesalers ",4480,4245
+"Petroleum and petroleum products merchant wholesalers ",4490,4247
+"Alcoholic beverages merchant wholesalers ",4560,4248
+"Farm supplies merchant wholesalers ",4570,42491
+"Miscellaneous nondurable goods merchant wholesalers ",4580,4249
+"Wholesale electronic markets and agents and brokers ",4585,4251
+"Not specified wholesale trade",4590,42
+"Automobile dealers ",4670,4411
+"Other motor vehicle dealers ",4680,4412
+"Automotive parts, accessories, and tire stores",4690,4413
+"Furniture and home furnishings stores ",4770,442
+"Household appliance stores ",4780,443141
+"Electronics Stores",4795,443142
+"Building material and supplies dealers  ",4870,4441
+"Hardware stores ",4880,44413
+"Lawn and garden equipment and supplies stores ",4890,4442
+"Supermarkets and other grocery (except convenience) stores",4971,44511
+"Convenience Stores",4972,44512
+"Specialty food stores",4980,4452
+"Beer, wine, and liquor stores ",4990,4453
+"Pharmacies and drug stores ",5070,44611
+"Health and personal care, except drug, stores ",5080,446
+"Gasoline stations ",5090,447
+"Clothing stores ",5170,4481
+"Shoe stores ",5180,44821
+"Jewelry, luggage, and leather goods stores ",5190,4483
+"Sporting goods, and hobby and toy stores ",5275,45111
+"Sewing, needlework, and piece goods stores ",5280,45113
+"Musical instrument and supplies stores ",5295,45114
+"Book stores and news dealers ",5370,45121
+"Department stores ",5381,45221
+"General merchandise stores, including warehouse clubs and supercenters ",5391,4523
+"Florists",5470,4531
+"Office supplies and stationery stores ",5480,45321
+"Used merchandise stores ",5490,4533
+"Gift, novelty, and souvenir shops ",5570,45322
+"Miscellaneous retail stores ",5580,4539
+"Electronic shopping and mail-order houses",5593,454110
+"Vending machine operators ",5670,4542
+"Fuel dealers ",5680,454310
+"Other direct selling establishments",5690,45439
+"Not specified retail trade",5790,44
+"Air transportation ",6070,481
+"Rail transportation ",6080,482
+"Water transportation ",6090,483
+"Truck transportation ",6170,484
+"Bus service and urban transit ",6180,4851
+"Taxi and limousine service ",6190,4853
+"Pipeline transportation ",6270,486
+"Scenic and sightseeing transportation ",6280,487
+"Services incidental to transportation ",6290,488
+"Postal Service ",6370,491
+"Couriers and messengers ",6380,492
+"Warehousing and storage ",6390,493
+"Electric power generation, transmission and distribution",570,2211
+"Natural gas distribution ",580,2212
+"Electric and gas, and other combinations ",590,2211
+"Water, steam, air-conditioning, and irrigation systems ",670,22131
+"Sewage treatment facilities ",680,22132
+"Not specified utilities ",690,22
+"Newspaper publishers",6470,51111
+"Periodical, book, and directory publishers",6480,5111
+"Software publishers",6490,5112
+"Motion pictures and video industries",6570,5121
+"Sound recording industries",6590,5122
+"Broadcasting (except internet)",6670,515
+"Internet publishing and broadcasting and web search portals",6672,51913
+"Wired telecommunications carriers ",6680,517311
+"Telecommunications, except wired telecommunications carriers ",6690,517
+"Data processing, hosting, and related services",6695,5182
+"Libraries and archives",6770,51912
+"Other information services, except libraries and archives, and internet publishing and broadcasting and web search portals",6780,5191
+"Banking and related activities",6870,521
+"Savings institutions, including credit unions ",6880,52212
+"Nondepository credit and related activities",6890,5222
+"Securities, commodities, funds, trusts, and other financial investments",6970,523
+"Insurance carriers",6991,5241
+"Agencies, brokerages, and other insurance related activities",6992,5242
+"Lessors of real estate, and offices of real estate agents and brokers",7071,5311
+"Real estate property managers, offices of real estate appraisers, and other activities related to real estate ",7072,5313
+"Automotive equipment rental and leasing ",7080,5321
+"Other consumer goods rental",7181,53221
+"Commercial, industrial, and other intangible assets rental and leasing",7190,5324
+"Legal services ",7270,5411
+"Accounting, tax preparation, bookkeeping, and payroll services",7280,5412
+"Architectural, engineering, and related services ",7290,5413
+"Specialized design services ",7370,5414
+"Computer systems design and related services ",7380,5415
+"Management, scientific, and technical consulting services",7390,5416
+"Scientific research and development services ",7460,5417
+"Advertising, public relations, and related services",7470,5418
+"Veterinary services ",7480,54194
+"Other professional, scientific, and technical services ",7490,5419
+"Management of companies and enterprises ",7570,55
+"Employment services ",7580,5613
+"Business support services ",7590,5614
+"Travel arrangements and reservation services ",7670,5615
+"Investigation and security services ",7680,5616
+"Services to buildings and dwellings (except cleaning during construction and immediately after construction) ",7690,5617
+"Landscaping services",7770,56173
+"Other administrative and other support services ",7780,5611
+"Waste management and remediation services ",7790,562
+"Elementary and secondary schools ",7860,6111
+"Colleges, universities, and professional schools, including junior colleges",7870,6112
+"Business, technical, and trade schools and training ",7880,6114
+"Other schools and instruction, and educational support services ",7890,6116
+"Offices of physicians ",7970,6211
+"Offices of dentists ",7980,6212
+"Offices of chiropractors ",7990,62131
+"Offices of optometrists ",8070,62132
+"Offices of other health practitioners  ",8080,6213
+"Outpatient care centers ",8090,6214
+"Home health care services ",8170,6216
+"Other health care services ",8180,6215
+"General medical and surgical hospitals, and specialty (except psychiatric and substance abuse) hospitals",8191,6221
+"Psychiatric and substance abuse hospitals",8192,6222
+"Nursing care facilities (skilled nursing facilities)",8270,6231
+"Residential care facilities, except skilled nursing facilities",8290,6232
+"Individual and family services ",8370,6241
+"Community food and housing, and emergency services ",8380,6242
+"Vocational rehabilitation services ",8390,6243
+"Child day care services ",8470,6244
+"Performing arts companies ",8561,7111
+"Spectator sports",8562,7112
+"Promoters of performing arts, sports, and similar events, agents and managers for artists, athletes, entertainers, and other public figures ",8563,7113
+"Independent artists, writers, and performers",8564,7115
+"Museums, art galleries, historical sites, and similar institutions",8570,712
+"Bowling centers ",8580,71395
+"Other amusement, gambling, and recreation industries   ",8590,713
+"Traveler accommodation ",8660,7211
+"Recreational vehicle parks and camps, and rooming and boarding houses, dormitories, and workers' camps",8670,7212
+"Restaurants and other food services ",8680,722
+"Drinking places, alcoholic beverages ",8690,7224
+"Automotive repair and maintenance ",8770,8111
+"Car washes",8780,811192
+"Electronic and precision equipment repair and maintenance",8790,8112
+"Commercial and industrial machinery and equipment repair and maintenance",8870,8113
+"Personal and household goods repair and maintenance ",8891,8114
+"Barber shops ",8970,812111
+"Beauty salons ",8980,812112
+"Nail salons and other personal care services  ",8990,812113
+"Drycleaning and laundry services ",9070,8123
+"Funeral homes, and cemeteries and crematories ",9080,8122
+"Other personal services ",9090,8129
+"Religious organizations ",9160,8131
+"Civic, social, advocacy organizations, and grantmaking and giving services",9170,8132
+"Labor unions",9180,81393
+"Business, professional, political, and similar organizations",9190,8139
+"Private households ",9290,814
+"Executive offices and legislative bodies ",9370,92111
+"Public finance activities ",9380,92113
+"Other general government and support ",9390,92119
+"Justice, public order, and safety activities ",9470,922
+"Administration of human resource programs  ",9480,923
+"Administration of environmental quality and housing programs ",9490,924
+"Administration of economic programs and space research",9570,926
+"National security and international affairs ",9590,928
+"U. S. Army",9670,928110
+"U. S. Air Force",9680,928110
+"U. S. Navy",9690,928110
+"U. S. Marines",9770,928110
+"U. S. Coast Guard",9780,928110
+"Armed Forces, Branch not specified",9790,928110
+"Military Reserves or National Guard",9870,928110
+"Unemployed, last worked 5 years ago or earlier or never worked",9920,0
+"Forestry except logging ",190,1132
+"Animal food, grain and oilseed milling ",1070,3112
+"Seafood and other miscellaneous foods, n.e.c. ",1280,3119
+"Knitting fabric mills, and apparel knitting mills ",1670,3151
+"Cut and sew, and apparel accessories and other apparel manufacturing",1691,3159
+"Leather and hide tanning and finishing, and other leather and allied product manufacturing",1790,3169
+"Miscellaneous paper and pulp products  ",1890,32223
+"Miscellaneous petroleum and coal products ",2090,32419
+"Industrial and miscellaneous chemicals ",2290,3259
+"Rubber products, except tires, manufacturing ",2390,32629
+"Cement, concrete, lime, and gypsum product manufacturing ",2570,3274
+"Iron and steel mills and steel product manufacturing  ",2670,3312
+"Structural metals, and boiler, tank, and shipping container manufacturing ",2870,3324
+"Ordnance ",2970,332993
+"Miscellaneous fabricated metal products manufacturing             ",2980,3326
+"Construction, and mining and oil and gas field machinery manufacturing ",3080,33313
+"Machinery manufacturing, n.e.c. or not specified",3291,3339
+"Communications, audio, and video equipment manufacturing",3370,3343
+"Electronic component and product manufacturing, n.e.c. ",3390,3346
+"Electric lighting and electrical equipment manufacturing, and other electrical component manufacturing, n.e.c.",3490,3353
+"Motor vehicles and motor vehicle equipment manufacturing ",3570,3362
+"Aircraft and parts manufacturing",3580,336412
+"Aerospace products and parts manufacturing ",3590,336415
+"Prefabricated wood buildings and mobile homes manufacturing",3790,321992
+"Sporting and athletic goods, and doll, toy and game manufacturing",3970,33993
+"Not specified manufacturing industries",3990,32
+"Drugs, sundries, and chemical and allied products merchant  wholesalers ",4380,4246
+"Sporting goods, and hobby and toy stores ",5275,45112
+"Not specified retail trade",5790,45
+"Bus service and urban transit ",6180,4852
+"Electric and gas, and other combinations ",590,2212
+"Water, steam, air-conditioning, and irrigation systems ",670,22133
+"Banking and related activities",6870,52211
+"Savings institutions, including credit unions ",6880,52213
+"Nondepository credit and related activities",6890,5223
+"Securities, commodities, funds, trusts, and other financial investments",6970,525
+"Lessors of real estate, and offices of real estate agents and brokers",7071,5312
+"Other consumer goods rental",7181,532281
+"Commercial, industrial, and other intangible assets rental and leasing",7190,533
+"Other administrative and other support services ",7780,5612
+"Colleges, universities, and professional schools, including junior colleges",7870,6113
+"Business, technical, and trade schools and training ",7880,6115
+"Other schools and instruction, and educational support services ",7890,6117
+"Other health care services ",8180,6219
+"General medical and surgical hospitals, and specialty (except psychiatric and substance abuse) hospitals",8191,6223
+"Residential care facilities, except skilled nursing facilities",8290,6233
+"Promoters of performing arts, sports, and similar events, agents and managers for artists, athletes, entertainers, and other public figures ",8563,7114
+"Recreational vehicle parks and camps, and rooming and boarding houses, dormitories, and workers' camps",8670,7213
+"Nail salons and other personal care services  ",8990,81219
+"Civic, social, advocacy organizations, and grantmaking and giving services",9170,8133
+"Executive offices and legislative bodies ",9370,92112
+"Justice, public order, and safety activities ",9470,92115
+"Administration of environmental quality and housing programs ",9490,925
+"Administration of economic programs and space research",9570,927
+"Miscellaneous paper and pulp products  ",1890,32229
+"Ordnance ",2970,332994
+"Miscellaneous fabricated metal products manufacturing             ",2980,3329
+"Machinery manufacturing, n.e.c. or not specified",3291,333
+"Electric lighting and electrical equipment manufacturing, and other electrical component manufacturing, n.e.c.",3490,3359
+"Motor vehicles and motor vehicle equipment manufacturing ",3570,3363
+"Aircraft and parts manufacturing",3580,336413
+"Aerospace products and parts manufacturing ",3590,336419
+"Not specified manufacturing industries",3990,33
+"Bus service and urban transit ",6180,4854
+"Banking and related activities",6870,52219
+"Other consumer goods rental",7181,532282
+"Other administrative and other support services ",7780,5619
+"Residential care facilities, except skilled nursing facilities",8290,6239
+"Civic, social, advocacy organizations, and grantmaking and giving services",9170,8134
+"Executive offices and legislative bodies ",9370,92114
+"Bus service and urban transit ",6180,4859
+"Other consumer goods rental",7181,532284
+"Other consumer goods rental",7181,532289
+"Other consumer goods rental",7181,5323
