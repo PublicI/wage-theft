@@ -1,4 +1,4 @@
-# wage-theft
+# Cheated at Work
 
 This repo contains code and data for ["Cheated at Work"](https://publicintegrity.org/topics/inequality-poverty-opportunity/workers-rights/cheated-at-work/), a Center for Public Integrity investigation of the effectiveness of federal wage theft laws and the agency charged with enforcing them.
 
