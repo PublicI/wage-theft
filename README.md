@@ -27,9 +27,13 @@ This R Markdown file contains code used to produce the analysis in [""]().
 ### Some notes about the data
 * The files relating to wage theft investigations in this repo's data folder were provided in response to a FOIA request to the U.S. Department of Labor completed on Dec. 10, 2020. The files contain investigations closed from Oct. 1, 2005 to Sept. 30, 2020. More information about these files can be found in the [data dictionary](data/wh_data_dictionary.xlsx) in the data folder.
 
-* The citizenship_industry.data and .xml files relating to the citizenship of particular industries' workforces come from [IPUMS USA](https://usa.ipums.org/usa/index.shtml).
+* The [citizenship_industry.data](data/citizenship_industry.dat) and [citizenship_industry.xml](data/citizenship_industry.xml) files relating to the citizenship of particular industries' workforces come from [IPUMS USA](https://usa.ipums.org/usa/index.shtml).
 
-* The visas_by_type_and_year.xlsx file comes from the [U.S. Department of State](https://travel.state.gov/content/travel/en/legal/visa-law0/visa-statistics/nonimmigrant-visa-statistics.html).
+* The [visas_by_type_and_year.xlsx](data/visas_by_type_and_year.xlsx) file comes from the [U.S. Department of State](https://travel.state.gov/content/travel/en/legal/visa-law0/visa-statistics/nonimmigrant-visa-statistics.html).
 
 ### Questions?
 For questions about the contents of this repo, email [Joe Yerardi](https://publicintegrity.org/author/joe-yerardi/) at jyerardi@publicintegrity.org.
+
+### License & Attribution
+
+This data is being released under a CC BY 4.0 license. You are free to copy, redistribute and adapt this data. All that we ask is that you provide appropriate credit and a link to this license. You can [view the full LICENSE here](LICENSE).
