@@ -31,3 +31,10 @@ data/v_bus_status.txt filter=lfs diff=lfs merge=lfs -text
 data/v_concluded_reason.txt filter=lfs diff=lfs merge=lfs -text
 data/wh_office.txt filter=lfs diff=lfs merge=lfs -text
 data/citizenship_industry.dat filter=lfs diff=lfs merge=lfs -text
+data/v_act.txt filter=lfs diff=lfs merge=lfs -text
+data/v_est_status.txt filter=lfs diff=lfs merge=lfs -text
+data/case_act_eer_viol.txt filter=lfs diff=lfs merge=lfs -text
+data/case_act_summary.txt filter=lfs diff=lfs merge=lfs -text
+data/case_cl_summary.txt filter=lfs diff=lfs merge=lfs -text
+data/case_cmp_assmnt.txt filter=lfs diff=lfs merge=lfs -text
+data/kase.txt filter=lfs diff=lfs merge=lfs -text
