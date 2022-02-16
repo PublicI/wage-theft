@@ -25,7 +25,7 @@ This R file contains code used to produce the analysis in ["Wage theft hits immi
 This R Markdown file contains code used to produce the analysis in [""]().
 
 ### Some notes about the data
-* The files relating to wage theft investigations in this repo's data folder were provided in response to a FOIA request to the U.S. Department of Labor completed on Dec. 10, 2020. The files contain investigations closed from Oct. 1, 2005 to Sept. 30, 2020. More information about these files can be found in the [data dictionary](data/'Copy of Standard WH Dictionary for FOIA.xlsx') in the data folder.
+* The files relating to wage theft investigations in this repo's data folder were provided in response to a FOIA request to the U.S. Department of Labor completed on Dec. 10, 2020. The files contain investigations closed from Oct. 1, 2005 to Sept. 30, 2020. More information about these files can be found in the [data dictionary](data/wh_data_dictionary.xlsx) in the data folder.
 
 * The citizenship_industry.data and .xml files relating to the citizenship of particular industries' workforces come from [IPUMS USA](https://usa.ipums.org/usa/index.shtml).
 
