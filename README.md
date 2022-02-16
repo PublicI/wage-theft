@@ -1,25 +1,25 @@
 # Cheated at Work
 
-This repo contains code and data for ["Cheated at Work"](https://publicintegrity.org/topics/inequality-poverty-opportunity/workers-rights/cheated-at-work/), a Center for Public Integrity investigation of the effectiveness of federal wage theft laws and the agency charged with enforcing them.
+This repo contains code and data for ["Cheated at Work,"](https://publicintegrity.org/topics/inequality-poverty-opportunity/workers-rights/cheated-at-work/) a Center for Public Integrity investigation of the effectiveness of federal wage theft laws and the agency charged with enforcing them.
 
 The series consists of four major stories:
-* ["Ripping off workers without consequences"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/ripping-off-workers-with-no-consequences/), published on May 4, 2021.
+* ["Ripping off workers without consequences,"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/ripping-off-workers-with-no-consequences/) published on May 4, 2021.
 
-* ["USPS has cheated mail carriers for years"]("https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/usps-cheated-mail-carriers/), published on August 31, 2021.
+* ["USPS has cheated mail carriers for years,"]("https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/usps-cheated-mail-carriers/) published on August 31, 2021.
 
-* ["Wage theft hits immigrants — hard"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/), published on October 14, 2021.
+* ["Wage theft hits immigrants — hard,"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/) published on October 14, 2021.
 
-* ["STORY #4"](), published on February 24, 2022.
+* ["STORY #4,"]() published on February 24, 2022.
 
 All stories were published in partnership with The Associated Press and Univision.
 
 ### Here's what's in this repo
 
 #### [wage_theft_repeat_violators.R](wage_theft_repeat_violators.R)
-This R file contains code used to produce the analysis in ["Ripping off workers without consequences"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/ripping-off-workers-with-no-consequences/).
+This R file contains code used to produce the analysis in ["Ripping off workers without consequences."](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/ripping-off-workers-with-no-consequences/)
 
 #### [wage_theft_immigrants.R](wage_theft_immigrants.R)
-This R file contains code used to produce the analysis in ["Wage theft hits immigrants — hard"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/).
+This R file contains code used to produce the analysis in ["Wage theft hits immigrants — hard."](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/)
 
 #### [wage_theft_guest_workers.Rmd](wage_theft_guest_workers.Rmd)
 This R Markdown file contains code used to produce the analysis in [""]().
