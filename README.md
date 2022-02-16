@@ -25,11 +25,11 @@ This R file contains code used to produce the analysis in ["Wage theft hits immi
 This R Markdown file contains code used to produce the analysis in [""]().
 
 ### Some notes about the data
-* The files relating to wage theft investigations in this repo's data folder were provided by a FOIA request to the Department of Labor that was completed on December 10, 2020. The files contain dinvestigations closed between October 1, 2005 and September 30, 2020. More information about these files can be found in the data dictionary in the data folder.
+* The files relating to wage theft investigations in this repo's data folder were provided in response to a FOIA request to the U.S. Department of Labor completed on Dec. 10, 2020. The files contain investigations closed from Oct. 1, 2005 to Sept. 30, 2020. More information about these files can be found in the data dictionary in the data folder. LINK OR PROVIDE THE NAME OF THE FILE.
 
 * The citizenship_industry.data and .xml files relating to the citizenship of particular industries' workforces come from [IPUMS USA](https://usa.ipums.org/usa/index.shtml).
 
-* The visas_by_type_and_year.xlsx file comes from the [Department of State](https://travel.state.gov/content/travel/en/legal/visa-law0/visa-statistics/nonimmigrant-visa-statistics.html).
+* The visas_by_type_and_year.xlsx file comes from the [U.S. Department of State](https://travel.state.gov/content/travel/en/legal/visa-law0/visa-statistics/nonimmigrant-visa-statistics.html).
 
 ### Questions?
 For questions about the contents of this repo, email [Joe Yerardi](https://publicintegrity.org/author/joe-yerardi/) at jyerardi@publicintegrity.org.
