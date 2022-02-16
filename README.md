@@ -5,7 +5,7 @@ This repo contains code and data for ["Cheated at Work,"](https://publicintegrit
 The series consists of four major stories:
 * ["Ripping off workers without consequences"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/ripping-off-workers-with-no-consequences/) published on May 4, 2021.
 
-* ["USPS has cheated mail carriers for years"]("https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/usps-cheated-mail-carriers/) published on August 31, 2021.
+* ["USPS has cheated mail carriers for years"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/usps-cheated-mail-carriers/) published on August 31, 2021.
 
 * ["Wage theft hits immigrants — hard"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/) published on October 14, 2021.
 
