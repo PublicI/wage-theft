@@ -9,7 +9,7 @@ The series consists of four major stories:
 
 * ["Wage theft hits immigrants — hard"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/) published on October 14, 2021.
 
-* ["STORY #4"]() published on February 24, 2022.
+* ["STORY #4"]() published on March 2, 2022.
 
 All stories were published in partnership with The Associated Press and Univision.
 
@@ -22,7 +22,7 @@ This R file contains code used to produce the analysis in ["Ripping off workers 
 This R file contains code used to produce the analysis in ["Wage theft hits immigrants — hard."](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/)
 
 #### [wage_theft_guest_workers.Rmd](wage_theft_guest_workers.Rmd)
-This R Markdown file contains code used to produce the analysis in [""]().
+This R Markdown file contains code used to produce the analysis in ["STORY #4"]().
 
 ### Some notes about the data
 * The files relating to wage theft investigations in this repo's data folder were provided in response to a FOIA request to the U.S. Department of Labor completed on Dec. 10, 2020. The files contain investigations closed from Oct. 1, 2005 to Sept. 30, 2020. More information about these files can be found in the [data dictionary](data/wh_data_dictionary.xlsx) in the data folder.
@@ -35,5 +35,4 @@ This R Markdown file contains code used to produce the analysis in [""]().
 For questions about the contents of this repo, email [Joe Yerardi](https://publicintegrity.org/author/joe-yerardi/) at jyerardi@publicintegrity.org.
 
 ### License & Attribution
-
 This data is being released under a CC BY 4.0 license. You are free to copy, redistribute and adapt this data. All that we ask is that you provide appropriate credit and a link to this license. You can [view the full LICENSE here](LICENSE).
