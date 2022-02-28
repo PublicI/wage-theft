@@ -111,6 +111,10 @@ mw_ot_cases <- kase %>%
   select(1, 29, 31, 37, 43, 47, 81, 23, 10, 11, 14, 16:20) %>% 
   arrange(ER_EIN, DATE_CONCLUDED)
 
+case_act_eer_viol %>% 
+  filter(CASE_ID == "1884250") %>% 
+  View()
+
 # Export the mw_ot_cases data frame
 write_csv(mw_ot_cases,
           "data/exported/repeat_violators/mw_ot_cases.csv")

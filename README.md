@@ -9,7 +9,7 @@ The series consists of four major stories:
 
 * ["Wage theft hits immigrants — hard"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/garment-immigrant-workers-wage-theft/) published on October 14, 2021.
 
-* ["STORY #4"]() published on March 2, 2022.
+* ["As guest workers increase, so do concerns about wage cheating"](https://publicintegrity.org/inequality-poverty-opportunity/workers-rights/cheated-at-work/guest-workers-increase-wage-cheating/) published on March 2, 2022.
 
 All stories were published in partnership with The Associated Press and Univision.
 
