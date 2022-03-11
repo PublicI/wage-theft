@@ -33,6 +33,8 @@ This R Markdown file contains code used to produce the analysis in ["As guest wo
 
 * The [visas_by_type_and_year.xlsx](data/visas_by_type_and_year.xlsx) file comes from the [U.S. Department of State](https://travel.state.gov/content/travel/en/legal/visa-law0/visa-statistics/nonimmigrant-visa-statistics.html).
 
+* More information about the data reporting behind this series, including challenges we faced and key findings, [can be found here](https://publicintegrity.org/inside-publici/newsletters/watchdog-newsletter/data-behind-cheated-at-work-available/).
+
 ### Questions?
 For questions about the contents of this repo, email [Joe Yerardi](https://publicintegrity.org/author/joe-yerardi/) at jyerardi@publicintegrity.org.
 
